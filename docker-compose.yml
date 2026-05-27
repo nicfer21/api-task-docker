@@ -16,7 +16,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
   app:
     build: ./backend
     container_name: mi-app-nest
@@ -30,6 +29,5 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     env_file:
       - .env
-
 volumes:
   postgres_data:
