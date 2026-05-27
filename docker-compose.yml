@@ -16,6 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mi-red
 
   app:
     build: ./backend
@@ -30,6 +32,12 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     env_file:
       - .env
+    networks:
+      - mi-red
+
+  networks:
+    mi-red:
+      driver: bridge
 
 volumes:
   postgres_data:
