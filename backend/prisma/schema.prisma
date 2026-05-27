@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["user", "task"]
+}
+
+model person {
+  id       Int      @id @default(autoincrement())
+  name     String   @db.VarChar(120)
+  birthday DateTime @db.Date()
+  password String
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @updatedAt() @db.Timestamp()
+
+  sessions session[]
+  toDos    toDo[]
+
+  @@schema("user")
+}
+
+model session {
+  id    Int     @id @default(autoincrement())
+  token String? @db.VarChar(100)
+
+  personId Int
+  person   person @relation(fields: [personId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+
+  @@schema("user")
+}
+
+model toDo {
+  id          Int     @id @default(autoincrement())
+  title       String  @db.VarChar(120)
+  description String  @db.VarChar(250)
+  completed   Boolean @default(false)
+
+  personId Int
+  person   person @relation(fields: [personId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @updatedAt() @db.Timestamp()
+
+  @@schema("task")
+}
